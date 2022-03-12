@@ -60,6 +60,26 @@ OTHER OPTIONS:
 200 - http://127.0.0.1:8000/.idea
 ```
 
+```shell
+➜ prad  .\prad.exe -u 'http://127.0.0.1:8000/{{path}}/admin'
+╱╱╱╱╱╱╱╱╱╱╭╮
+╱╱╱╱╱╱╱╱╱╱┃┃
+╭━━┳━┳━━┳━╯┃
+┃╭╮┃╭┫╭╮┃╭╮┃
+┃╰╯┃┃┃╭╮┃╰╯┃
+┃╭━┻╯╰╯╰┻━━╯
+┃┃
+╰╯ v0.0.1
+
+404 - http://127.0.0.1:8000/backup/admin
+404 - http://127.0.0.1:8000/login/admin
+404 - http://127.0.0.1:8000/admin/admin
+404 - http://127.0.0.1:8000/manager/admin
+404 - http://127.0.0.1:8000/.svn/admin
+404 - http://127.0.0.1:8000/.idea/admin
+404 - http://127.0.0.1:8000/.git/admin
+```
+
 ## Features
 
 - [x] custom wordlist file
