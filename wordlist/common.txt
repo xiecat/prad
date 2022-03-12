@@ -1,0 +1,7 @@
+admin
+manager
+login
+backup
+.git
+.svn
+.idea
