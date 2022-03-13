@@ -42,6 +42,9 @@ func NewClient(options *Options) (*Client, error) {
 	hc := &http.Client{
 		Timeout:   time.Second * time.Duration(options.Timeout),
 		Transport: ht,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
 	}
 
 	var (
