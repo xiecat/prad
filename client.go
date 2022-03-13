@@ -81,7 +81,7 @@ func NewClient(options *Options) (*Client, error) {
 		if r.Redirect != "" {
 			output = fmt.Sprintf("%s -> %s", r.URL, r.Redirect)
 		} else {
-			output = fmt.Sprintf("%s", r.URL)
+			output = r.URL
 		}
 
 		switch r.Code {
