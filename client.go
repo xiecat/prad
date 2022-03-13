@@ -109,12 +109,14 @@ func (c *Client) Do(ctx context.Context, target string) error {
 	wordChan := make(chan string, c.Options.Concurrent)
 	wg := &sync.WaitGroup{}
 	for i := 0; i < c.Options.Concurrent && i < len(c.Wordlist); i++ {
+		wg.Add(1)
 		go func() {
 			defer wg.Done()
+
 			for {
 				select {
 				case <-ctx.Done():
-					break
+					return
 				default:
 				}
 
@@ -138,7 +140,6 @@ func (c *Client) Do(ctx context.Context, target string) error {
 				}
 			}
 		}()
-		wg.Add(1)
 	}
 
 	for _, word := range c.Wordlist {
