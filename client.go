@@ -12,6 +12,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -87,13 +88,17 @@ func NewClient(options *Options) (*Client, error) {
 			output = r.URL
 		}
 
-		switch r.Code {
-		case http.StatusNotFound:
-			code = aurora.BrightRed(r.Code).String()
-		case http.StatusOK:
-			code = aurora.BrightGreen(r.Code).String()
-		default:
-			code = aurora.BrightYellow(r.Code).String()
+		if options.NoColor {
+			code = strconv.Itoa(r.Code)
+		} else {
+			switch r.Code {
+			case http.StatusNotFound:
+				code = aurora.BrightRed(r.Code).String()
+			case http.StatusOK:
+				code = aurora.BrightGreen(r.Code).String()
+			default:
+				code = aurora.BrightYellow(r.Code).String()
+			}
 		}
 
 		fmt.Printf("%s - %s\n", code, output)

@@ -17,6 +17,7 @@ type Options struct {
 	FilterCode  int
 	ExcludeCode int
 	Timeout     int
+	NoColor     bool
 }
 
 func ParseOptions() *Options {
@@ -36,6 +37,7 @@ func ParseOptions() *Options {
 	flags.SetGroup("output", "output options")
 	flags.IntVarP(&o.FilterCode, "filter-code", "fc", 0, "filter by status code").Group("output")
 	flags.IntVarP(&o.ExcludeCode, "exclude-code", "ec", 0, "exclude by status code").Group("output")
+	flags.BoolVarP(&o.NoColor, "no-color", "nc", false, "disable color in output")
 
 	flags.IntVar(&o.Concurrent, "concurrent", 10, "concurrent goroutines")
 	flags.StringVar(&o.Proxy, "proxy", "", "proxy")
