@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"crypto/tls"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"log"
@@ -192,8 +193,7 @@ func (c *Client) Check(ctx context.Context, target, word string) (*Result, error
 	}
 
 	if c.Options.BasicAuth != "" {
-		basicAuth := strings.SplitN(c.Options.BasicAuth, ":", 2)
-		req.SetBasicAuth(basicAuth[0], basicAuth[1])
+		req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(c.Options.BasicAuth)))
 	}
 
 	resp, err := c.Client.Do(req)
