@@ -91,6 +91,6 @@ OTHER OPTIONS:
 - [x] filter by status code
 - [x] exclude by status code
 - [x] custom timeout
-- [ ] QPS limit
+- [x] QPS limit
 - [ ] custom headers
 - [ ] progress save

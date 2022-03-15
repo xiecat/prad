@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/logrusorgru/aurora"
+	"golang.org/x/time/rate"
 )
 
 type Client struct {
@@ -25,6 +26,7 @@ type Client struct {
 	Client        *http.Client
 	Options       *Options
 	ResultHandler func(*Result)
+	RateLimiter   *rate.Limiter
 }
 
 func NewClient(options *Options) (*Client, error) {
@@ -72,9 +74,10 @@ func NewClient(options *Options) (*Client, error) {
 	}
 
 	c := &Client{
-		Wordlist: wordlist,
-		Client:   hc,
-		Options:  options,
+		Wordlist:    wordlist,
+		Client:      hc,
+		Options:     options,
+		RateLimiter: rate.NewLimiter(rate.Every(time.Second), options.QPS),
 	}
 
 	c.ResultHandler = func(r *Result) {
@@ -126,6 +129,11 @@ func (c *Client) Do(ctx context.Context, target string) error {
 				case <-ctx.Done():
 					return
 				default:
+				}
+
+				err := c.RateLimiter.Wait(ctx)
+				if err != nil {
+					log.Printf("Rate Limiter failed when wait: %s\n", err)
 				}
 
 				word, ok := <-wordChan

@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/projectdiscovery/goflags v0.0.7
+	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65
 )
 
 require (

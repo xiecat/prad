@@ -18,6 +18,7 @@ type Options struct {
 	ExcludeCode int
 	Timeout     int
 	NoColor     bool
+	QPS         int
 }
 
 func ParseOptions() *Options {
@@ -42,6 +43,7 @@ func ParseOptions() *Options {
 	flags.IntVar(&o.Concurrent, "concurrent", 10, "concurrent goroutines")
 	flags.StringVar(&o.Proxy, "proxy", "", "proxy")
 	flags.IntVar(&o.Timeout, "timeout", 5, "timeout")
+	flags.IntVar(&o.QPS, "qps", 10, "QPS")
 
 	showBanner()
 	err := flags.Parse()
