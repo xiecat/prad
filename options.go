@@ -21,6 +21,7 @@ type Options struct {
 	NoColor     bool
 	QPS         int
 	BasicAuth   string
+	UserAgent   string
 }
 
 func ParseOptions() *Options {
@@ -47,6 +48,7 @@ func ParseOptions() *Options {
 	flags.IntVar(&o.Timeout, "timeout", 5, "timeout")
 	flags.IntVar(&o.QPS, "qps", 10, "QPS")
 	flags.StringVar(&o.BasicAuth, "basic-auth", "", "basic auth user:pass")
+	flags.StringVar(&o.UserAgent, "user-agent", "", "user agent")
 
 	showBanner()
 	err := flags.Parse()

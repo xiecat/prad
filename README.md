@@ -93,5 +93,6 @@ OTHER OPTIONS:
 - [x] custom timeout
 - [x] QPS limit
 - [x] basic auth
+- [x] custom user agent
 - [ ] custom headers
 - [ ] progress save

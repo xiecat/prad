@@ -196,6 +196,10 @@ func (c *Client) Check(ctx context.Context, target, word string) (*Result, error
 		req.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(c.Options.BasicAuth)))
 	}
 
+	if c.Options.UserAgent != "" {
+		req.Header.Set("User-Agent", c.Options.UserAgent)
+	}
+
 	resp, err := c.Client.Do(req)
 	if err != nil {
 		return nil, err
