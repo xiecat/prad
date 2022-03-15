@@ -133,7 +133,7 @@ func (c *Client) Do(ctx context.Context, target string) error {
 
 				err := c.RateLimiter.Wait(ctx)
 				if err != nil {
-					log.Printf("Rate Limiter failed when wait: %s\n", err)
+					log.Printf("rate limiter failed when wait: %s\n", err)
 				}
 
 				word, ok := <-wordChan
@@ -189,6 +189,11 @@ func (c *Client) Check(ctx context.Context, target, word string) (*Result, error
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
+	}
+
+	if c.Options.BasicAuth != "" {
+		basicAuth := strings.SplitN(c.Options.BasicAuth, ":", 2)
+		req.SetBasicAuth(basicAuth[0], basicAuth[1])
 	}
 
 	resp, err := c.Client.Do(req)

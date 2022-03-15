@@ -92,5 +92,6 @@ OTHER OPTIONS:
 - [x] exclude by status code
 - [x] custom timeout
 - [x] QPS limit
+- [x] basic auth
 - [ ] custom headers
 - [ ] progress save

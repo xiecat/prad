@@ -2,6 +2,7 @@ package prad
 
 import (
 	"log"
+	"strings"
 
 	"github.com/projectdiscovery/goflags"
 )
@@ -19,6 +20,7 @@ type Options struct {
 	Timeout     int
 	NoColor     bool
 	QPS         int
+	BasicAuth   string
 }
 
 func ParseOptions() *Options {
@@ -44,11 +46,16 @@ func ParseOptions() *Options {
 	flags.StringVar(&o.Proxy, "proxy", "", "proxy")
 	flags.IntVar(&o.Timeout, "timeout", 5, "timeout")
 	flags.IntVar(&o.QPS, "qps", 10, "QPS")
+	flags.StringVar(&o.BasicAuth, "basic-auth", "", "basic auth user:pass")
 
 	showBanner()
 	err := flags.Parse()
 	if err != nil {
 		log.Fatalf("parse options failed: %s", err)
+	}
+
+	if o.BasicAuth != "" && !strings.Contains(o.BasicAuth, ":") {
+		log.Fatalf("incorrect basic auth format: %s", o.BasicAuth)
 	}
 
 	return o
