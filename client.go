@@ -200,6 +200,13 @@ func (c *Client) Check(ctx context.Context, target, word string) (*Result, error
 		req.Header.Set("User-Agent", c.Options.UserAgent)
 	}
 
+	if len(c.Options.Headers) > 0 {
+		for _, header := range c.Options.Headers {
+			kvs := strings.SplitN(header, ":", 2)
+			req.Header.Set(kvs[0], kvs[1])
+		}
+	}
+
 	resp, err := c.Client.Do(req)
 	if err != nil {
 		return nil, err

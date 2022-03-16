@@ -22,6 +22,7 @@ type Options struct {
 	QPS         int
 	BasicAuth   string
 	UserAgent   string
+	Headers     goflags.CommaSeparatedStringSlice
 }
 
 func ParseOptions() *Options {
@@ -49,6 +50,7 @@ func ParseOptions() *Options {
 	flags.IntVar(&o.QPS, "qps", 10, "QPS")
 	flags.StringVar(&o.BasicAuth, "basic-auth", "", "basic auth user:pass")
 	flags.StringVar(&o.UserAgent, "user-agent", "", "user agent")
+	flags.CommaSeparatedStringSliceVar(&o.Headers, "headers", []string{}, "custom headers")
 
 	showBanner()
 	err := flags.Parse()
@@ -58,6 +60,12 @@ func ParseOptions() *Options {
 
 	if o.BasicAuth != "" && !strings.Contains(o.BasicAuth, ":") {
 		log.Fatalf("incorrect basic auth format: %s", o.BasicAuth)
+	}
+
+	for _, header := range o.Headers {
+		if !strings.Contains(header, ":") {
+			log.Fatalf("incorrect custom header: %s", header)
+		}
 	}
 
 	return o

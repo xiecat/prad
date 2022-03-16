@@ -94,5 +94,5 @@ OTHER OPTIONS:
 - [x] QPS limit
 - [x] basic auth
 - [x] custom user agent
-- [ ] custom headers
+- [x] custom headers
 - [ ] progress save
