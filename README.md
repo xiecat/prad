@@ -35,9 +35,14 @@ OUTPUT OPTIONS:
    -ec, -exclude-code int  exclude by status code
 
 OTHER OPTIONS:
-   -concurrent int  concurrent goroutines (default 10)
-   -proxy string    proxy
-   -timeout int     timeout (default 5)
+   -nc, -no-color      disable color in output
+   -concurrent int     concurrent goroutines (default 10)
+   -proxy string       proxy
+   -timeout int        timeout (default 5)
+   -qps int            QPS (default 10)
+   -basic-auth string  basic auth user:pass
+   -user-agent string  user agent
+   -headers string[]   custom headers
 ```
 
 ```shell
