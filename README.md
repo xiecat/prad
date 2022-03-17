@@ -101,3 +101,4 @@ OTHER OPTIONS:
 - [x] custom user agent
 - [x] custom headers
 - [ ] progress save
+- [ ] WAF detection
