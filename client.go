@@ -78,7 +78,7 @@ func NewClient(options *Options) (*Client, error) {
 		Wordlist:    wordlist,
 		Client:      hc,
 		Options:     options,
-		RateLimiter: rate.NewLimiter(rate.Every(time.Second), options.QPS),
+		RateLimiter: rate.NewLimiter(rate.Limit(options.QPS), 1),
 	}
 
 	c.ResultHandler = func(r *Result) {
