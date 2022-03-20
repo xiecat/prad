@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -16,6 +17,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/logrusorgru/aurora"
@@ -122,7 +124,7 @@ func (c *Client) Do(ctx context.Context, target string) error {
 	go func() {
 		defer close(wordChan)
 
-		for _, word := range c.Wordlist {
+		for _, word := range c.Wordlist[c.Options.Offset:] {
 			select {
 			case <-ctx.Done():
 				return
@@ -133,6 +135,7 @@ func (c *Client) Do(ctx context.Context, target string) error {
 		}
 	}()
 
+	var counter uint32
 	wg := &sync.WaitGroup{}
 	for i := 0; i < c.Options.Concurrent && i < len(c.Wordlist); i++ {
 		wg.Add(1)
@@ -156,16 +159,19 @@ func (c *Client) Do(ctx context.Context, target string) error {
 					break
 				}
 				resp, err := c.Check(ctx, target, word)
+				atomic.AddUint32(&counter, 1)
 				if err != nil {
 					log.Printf("check %s %s failed: %s\n", target, word, err)
 					continue
 				}
+
 				if c.Options.FilterCode != 0 && resp.Code != c.Options.FilterCode {
 					continue
 				}
 				if c.Options.ExcludeCode != 0 && resp.Code == c.Options.ExcludeCode {
 					continue
 				}
+
 				if resp != nil && c.ResultHandler != nil {
 					c.ResultHandler(resp)
 				}
@@ -174,6 +180,21 @@ func (c *Client) Do(ctx context.Context, target string) error {
 	}
 
 	wg.Wait()
+
+	if int(counter) != len(c.Wordlist) {
+		c.Options.Offset = int(counter)
+
+		fd, err := os.Create("resume.cfg")
+		if err != nil {
+			return fmt.Errorf("create resume file failed: %s", err)
+		}
+
+		err = json.NewEncoder(fd).Encode(c.Options)
+		if err != nil {
+			return fmt.Errorf("save resume file failed: %s", err)
+		}
+	}
+
 	return nil
 }
 

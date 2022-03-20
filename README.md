@@ -100,5 +100,5 @@ OTHER OPTIONS:
 - [x] basic auth
 - [x] custom user agent
 - [x] custom headers
-- [ ] progress save
+- [x] progress save
 - [ ] WAF detection

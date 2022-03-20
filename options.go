@@ -1,7 +1,10 @@
 package prad
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/projectdiscovery/goflags"
@@ -23,6 +26,8 @@ type Options struct {
 	BasicAuth   string
 	UserAgent   string
 	Headers     goflags.CommaSeparatedStringSlice
+	Resume      bool
+	Offset      int
 }
 
 func ParseOptions() *Options {
@@ -33,6 +38,7 @@ func ParseOptions() *Options {
 	flags.SetGroup("input", "input options")
 	flags.StringVarP(&o.Target, "url", "u", "", "url to scan").Group("input")
 	flags.StringVarP(&o.WordFile, "word-file", "wf", "", "wordlist file").Group("input")
+	flags.BoolVar(&o.Resume, "resume", false, "resume task from resume.cfg")
 
 	flags.SetGroup("word", "word options")
 	flags.StringVarP(&o.Extension, "word-ext", "we", "", "word extension").Group("word")
@@ -58,15 +64,53 @@ func ParseOptions() *Options {
 		log.Fatalf("parse options failed: %s", err)
 	}
 
+	if o.Resume {
+		err = o.ReadConfigFile("")
+		if err != nil {
+			log.Fatalf("read config file failed: %s", err)
+		}
+	}
+
+	err = o.CheckOptions()
+	if err != nil {
+		log.Fatalf("check options failed: %s", err)
+	}
+
+	return o
+}
+
+func (o *Options) CheckOptions() error {
 	if o.BasicAuth != "" && !strings.Contains(o.BasicAuth, ":") {
-		log.Fatalf("incorrect basic auth format: %s", o.BasicAuth)
+		return fmt.Errorf("incorrect basic auth format: %s", o.BasicAuth)
 	}
 
 	for _, header := range o.Headers {
 		if !strings.Contains(header, ":") {
-			log.Fatalf("incorrect custom header: %s", header)
+			return fmt.Errorf("incorrect custom header: %s", header)
 		}
 	}
 
-	return o
+	return nil
+}
+
+func (o *Options) ReadConfigFile(filename string) error {
+	var (
+		fd  *os.File
+		err error
+	)
+	if filename != "" {
+		fd, err = os.Open(filename)
+	} else {
+		fd, err = os.Open("resume.cfg")
+	}
+	if err != nil {
+		return fmt.Errorf("open resume file failed: %s", err)
+	}
+
+	err = json.NewDecoder(fd).Decode(o)
+	if err != nil {
+		return fmt.Errorf("read resume file failed: %s", err)
+	}
+
+	return nil
 }
