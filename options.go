@@ -16,7 +16,7 @@ import (
 type Options struct {
 	Target      string
 	WordFile    string
-	Wordlist    []string
+	Wordlist    goflags.CommaSeparatedStringSlice
 	Extension   string
 	Concurrent  int
 	Prefix      string
@@ -42,7 +42,8 @@ func ParseOptions() *Options {
 	flags.SetGroup("input", "input options")
 	flags.StringVarP(&o.Target, "url", "u", "", "url to scan").Group("input")
 	flags.StringVarP(&o.WordFile, "word-file", "wf", "", "wordlist file").Group("input")
-	flags.BoolVar(&o.Resume, "resume", false, "resume task from resume.cfg")
+	flags.CommaSeparatedStringSliceVarP(&o.Wordlist, "word-list", "wl", []string{}, "wordlist").Group("input")
+	flags.BoolVar(&o.Resume, "resume", false, "resume task from resume.cfg").Group("input")
 
 	flags.SetGroup("word", "word options")
 	flags.StringVarP(&o.Extension, "word-ext", "we", "", "word extension").Group("word")
@@ -68,9 +69,11 @@ func ParseOptions() *Options {
 		log.Fatalf("parse options failed: %s", err)
 	}
 
-	err = o.ReadWordFile("")
-	if err != nil {
-		log.Fatalf("read wordlist file failed: %s", err)
+	if o.Wordlist == nil {
+		err = o.ReadWordFile("")
+		if err != nil {
+			log.Fatalf("read wordlist file failed: %s", err)
+		}
 	}
 
 	if o.Resume {
