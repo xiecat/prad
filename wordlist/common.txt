@@ -5,3 +5,4 @@ backup
 .git
 .svn
 .idea
+../../../../../../../../etc/passwd
