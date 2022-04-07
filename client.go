@@ -1,18 +1,15 @@
 package prad
 
 import (
-	"bufio"
 	"context"
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -53,31 +50,8 @@ func NewClient(options *Options) (*Client, error) {
 		},
 	}
 
-	var (
-		fr       io.ReadCloser
-		err      error
-		wordlist []string
-	)
-	if options.WordFile != "" {
-		fr, err = os.Open(options.WordFile)
-	} else {
-		fr, err = Fs.Open(path.Join("wordlist", "common.txt"))
-	}
-	if err != nil {
-		return nil, fmt.Errorf("open wordlist file failed: %s", err)
-	}
-	fs := bufio.NewScanner(fr)
-	fs.Split(bufio.ScanLines)
-	for fs.Scan() {
-		wordlist = append(wordlist, fs.Text())
-	}
-	err = fr.Close()
-	if err != nil {
-		log.Printf("close wordlist file failed: %s\n", err)
-	}
-
 	c := &Client{
-		Wordlist:    wordlist,
+		Wordlist:    options.Wordlist,
 		Client:      hc,
 		Options:     options,
 		RateLimiter: rate.NewLimiter(rate.Limit(options.QPS), 1),

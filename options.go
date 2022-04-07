@@ -1,10 +1,13 @@
 package prad
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/projectdiscovery/goflags"
@@ -13,6 +16,7 @@ import (
 type Options struct {
 	Target      string
 	WordFile    string
+	Wordlist    []string
 	Extension   string
 	Concurrent  int
 	Prefix      string
@@ -64,6 +68,11 @@ func ParseOptions() *Options {
 		log.Fatalf("parse options failed: %s", err)
 	}
 
+	err = o.ReadWordFile("")
+	if err != nil {
+		log.Fatalf("read wordlist file failed: %s", err)
+	}
+
 	if o.Resume {
 		err = o.ReadConfigFile("")
 		if err != nil {
@@ -111,6 +120,37 @@ func (o *Options) ReadConfigFile(filename string) error {
 	if err != nil {
 		return fmt.Errorf("read resume file failed: %s", err)
 	}
+
+	return nil
+}
+
+func (o *Options) ReadWordFile(filename string) error {
+	var (
+		fr       io.ReadCloser
+		err      error
+		wordlist []string
+	)
+
+	if filename != "" {
+		fr, err = os.Open(filename)
+	} else if o.WordFile != "" {
+		fr, err = os.Open(o.WordFile)
+	} else {
+		fr, err = Fs.Open(path.Join("wordlist", "common.txt"))
+	}
+	if err != nil {
+		return fmt.Errorf("open wordlist file failed: %s", err)
+	}
+	fs := bufio.NewScanner(fr)
+	fs.Split(bufio.ScanLines)
+	for fs.Scan() {
+		wordlist = append(wordlist, fs.Text())
+	}
+	err = fr.Close()
+	if err != nil {
+		log.Printf("close wordlist file failed: %s\n", err)
+	}
+	o.Wordlist = wordlist
 
 	return nil
 }
