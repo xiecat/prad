@@ -6,3 +6,4 @@ backup
 .svn
 .idea
 ../../../../../../../../etc/passwd
+///////../../../etc/passwd
