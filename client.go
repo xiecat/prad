@@ -215,6 +215,7 @@ func (c *Client) Check(ctx context.Context, target, word string) (*Result, error
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	result := &Result{
 		URL:      u,
