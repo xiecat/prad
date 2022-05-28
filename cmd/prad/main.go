@@ -2,11 +2,9 @@ package main
 
 import (
 	"context"
-	"log"
-	"os"
-	"os/signal"
-
 	"github.com/tardc/prad"
+	"github.com/tardc/prad/pkg/interrupt"
+	"log"
 )
 
 func main() {
@@ -20,25 +18,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, os.Interrupt)
-	defer close(signalChan)
-	go func() {
-		count := 0
-		for {
-			_, ok := <-signalChan
-			if ok {
-				if count == 0 {
-					count += 1
-					cancel()
-				} else {
-					os.Exit(1)
-				}
-			} else {
-				return
-			}
-		}
-	}()
+	go interrupt.HandleInterrupt(cancel)
 
 	err = client.Do(ctx, options.Target)
 	if err != nil {
