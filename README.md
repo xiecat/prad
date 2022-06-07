@@ -88,17 +88,14 @@ OTHER OPTIONS:
 ## Features
 
 - [x] custom wordlist file
-- [x] custom word extension
-- [x] custom word prefix, word suffix
 - [x] custom URL replacement location
 - [x] support proxy
 - [x] concurrency settings
-- [x] filter by status code
-- [x] exclude by status code
 - [x] custom timeout
 - [x] QPS limit
-- [x] basic auth
-- [x] custom user agent
-- [x] custom headers
-- [x] progress save
+- [ ] custom word extension
+- [ ] custom word prefix, word suffix
+- [ ] filter by status code
+- [ ] exclude by status code
+- [ ] progress save
 - [ ] WAF detection

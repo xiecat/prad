@@ -1,4 +1,4 @@
-package prad
+package assets
 
 import "embed"
 

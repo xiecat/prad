@@ -1,4 +1,4 @@
-package prad
+package main
 
 import "log"
 

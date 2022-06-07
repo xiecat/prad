@@ -2,15 +2,18 @@ package main
 
 import (
 	"context"
-	"github.com/tardc/prad"
-	"github.com/tardc/prad/pkg/interrupt"
 	"log"
+
+	"github.com/tardc/prad"
+	"github.com/tardc/prad/internal/output"
+	"github.com/tardc/prad/pkg/interrupt"
 )
 
 func main() {
-	options := prad.ParseOptions()
 
-	client, err := prad.NewClient(options)
+	options := parseOptions()
+
+	client, err := newClient(options)
 	if err != nil {
 		log.Fatalf("create client failed: %s\n", err)
 	}
@@ -20,8 +23,42 @@ func main() {
 
 	go interrupt.HandleInterrupt(cancel)
 
-	err = client.Do(ctx, options.Target)
+	resultChan, err := client.Do(ctx, options.Target)
 	if err != nil {
 		log.Fatalf("run failed: %s\n", err)
 	}
+
+	w := output.NewStdout(options.NoColor)
+	defer w.Close()
+	for r := range resultChan {
+		w.Write(r)
+	}
+}
+
+func newClient(o *options) (*prad.Client, error) {
+	client, err := prad.NewClient(o.Wordlist)
+	if err != nil {
+		return nil, err
+	}
+
+	if o.Proxy != "" {
+		err := client.SetProxy(o.Proxy)
+		if err != nil {
+			return nil, err
+		}
+	}
+	err = client.SetTimeout(o.Timeout)
+	if err != nil {
+		return nil, err
+	}
+	err = client.SetQPS(o.QPS)
+	if err != nil {
+		return nil, err
+	}
+	err = client.SetConcurrent(o.Concurrent)
+	if err != nil {
+		return nil, err
+	}
+
+	return client, err
 }
