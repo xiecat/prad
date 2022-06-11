@@ -22,22 +22,18 @@ Usage:
 
 Flags:
 INPUT OPTIONS:
-   -u, -url string         url to scan
-   -wf, -word-file string  wordlist file
-
-WORD OPTIONS:
-   -we, -word-ext string     word extension
-   -wp, -word-prefix string  word prefix
-   -ws, -word-suffix string  word suffix
+   -u, -url string           url to scan
+   -wf, -word-file string    wordlist file
+   -wl, -word-list string[]  wordlist
 
 OUTPUT OPTIONS:
-   -fc, -filter-code int   filter by status code
-   -ec, -exclude-code int  exclude by status code
+   -nc, -no-color  disable color in output
 
 OTHER OPTIONS:
    -concurrent int  concurrent goroutines (default 10)
    -proxy string    proxy
    -timeout int     timeout (default 5)
+   -qps int         QPS (default 10)
 ```
 
 ```shell
