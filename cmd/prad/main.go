@@ -28,7 +28,12 @@ func main() {
 		log.Fatalf("run failed: %s\n", err)
 	}
 
-	w := output.NewStdout(options.NoColor)
+	var w output.Writer
+	if options.OutputFile != "" {
+		w = output.NewMultiOut(options.NoColor, options.OutputFile)
+	} else {
+		w = output.NewStdout(options.NoColor)
+	}
 	defer w.Close()
 	for r := range resultChan {
 		w.Write(r)

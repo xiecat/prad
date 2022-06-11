@@ -28,6 +28,7 @@ INPUT OPTIONS:
 
 OUTPUT OPTIONS:
    -nc, -no-color  disable color in output
+   -of, -output-file
 
 OTHER OPTIONS:
    -concurrent int  concurrent goroutines (default 10)

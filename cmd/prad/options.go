@@ -16,6 +16,7 @@ type options struct {
 	Target     string
 	WordFile   string
 	Wordlist   goflags.CommaSeparatedStringSlice
+	OutputFile string
 	Concurrent int
 	Proxy      string
 	Timeout    int
@@ -35,6 +36,7 @@ func parseOptions() *options {
 
 	flags.SetGroup("output", "output options")
 	flags.BoolVarP(&o.NoColor, "no-color", "nc", false, "disable color in output").Group("output")
+	flags.StringVarP(&o.OutputFile, "output-file", "of", "", "output filename").Group("output")
 
 	flags.IntVar(&o.Concurrent, "concurrent", 10, "concurrent goroutines")
 	flags.StringVar(&o.Proxy, "proxy", "", "proxy")
