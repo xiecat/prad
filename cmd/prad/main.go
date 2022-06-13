@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/tardc/prad"
 	"github.com/tardc/prad/internal/output"
@@ -36,7 +37,16 @@ func main() {
 	}
 	defer w.Close()
 	for r := range resultChan {
-		w.Write(r)
+		if options.filterStatusCode != nil {
+			for _, statusCode := range options.filterStatusCode {
+				if statusCode == strconv.Itoa(r.Code) {
+					w.Write(r)
+					break
+				}
+			}
+		} else {
+			w.Write(r)
+		}
 	}
 }
 

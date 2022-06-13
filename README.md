@@ -87,7 +87,7 @@ OTHER OPTIONS:
 - [x] QPS limit
 - [ ] custom word extension
 - [ ] custom word prefix, word suffix
-- [ ] filter by status code
+- [x] filter by status code
 - [ ] exclude by status code
 - [ ] progress save
 - [ ] WAF detection
