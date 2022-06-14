@@ -44,6 +44,17 @@ func main() {
 					break
 				}
 			}
+		} else if options.excludeStatusCode != nil {
+			var shouldOutput = true
+			for _, statusCode := range options.excludeStatusCode {
+				if statusCode == strconv.Itoa(r.Code) {
+					shouldOutput = false
+					break
+				}
+			}
+			if shouldOutput {
+				w.Write(r)
+			}
 		} else {
 			w.Write(r)
 		}

@@ -88,6 +88,6 @@ OTHER OPTIONS:
 - [ ] custom word extension
 - [ ] custom word prefix, word suffix
 - [x] filter by status code
-- [ ] exclude by status code
+- [x] exclude by status code
 - [ ] progress save
 - [ ] WAF detection
