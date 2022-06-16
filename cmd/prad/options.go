@@ -49,6 +49,16 @@ func parseOptions() *options {
 
 	showBanner()
 	err := flags.Parse()
+
+	if flags.CommandLine.NFlag() < 1 {
+		flags.CommandLine.Usage()
+		os.Exit(1)
+	} else {
+		if o.Target == "" {
+			log.Fatalf("target must be set")
+		}
+	}
+
 	if err != nil {
 		log.Fatalf("parse options failed: %s", err)
 	}
