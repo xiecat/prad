@@ -49,6 +49,9 @@ func parseOptions() *options {
 
 	showBanner()
 	err := flags.Parse()
+	if err != nil {
+		log.Fatalf("parse options failed: %s", err)
+	}
 
 	if flags.CommandLine.NFlag() < 1 {
 		flags.CommandLine.Usage()
@@ -57,10 +60,6 @@ func parseOptions() *options {
 		if o.Target == "" {
 			log.Fatalf("target must be set")
 		}
-	}
-
-	if err != nil {
-		log.Fatalf("parse options failed: %s", err)
 	}
 
 	if o.Wordlist == nil {
