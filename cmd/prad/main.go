@@ -2,8 +2,12 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"math/rand"
+	"os"
 	"strconv"
+	"time"
 
 	"github.com/tardc/prad"
 	"github.com/tardc/prad/internal/output"
@@ -36,17 +40,18 @@ func main() {
 		w = output.NewStdout(options.NoColor)
 	}
 	defer w.Close()
+
 	for r := range resultChan {
-		if options.filterStatusCode != nil {
-			for _, statusCode := range options.filterStatusCode {
+		if options.FilterStatusCode != nil {
+			for _, statusCode := range options.FilterStatusCode {
 				if statusCode == strconv.Itoa(r.Code) {
 					w.Write(r)
 					break
 				}
 			}
-		} else if options.excludeStatusCode != nil {
+		} else if options.ExcludeStatusCode != nil {
 			var shouldOutput = true
-			for _, statusCode := range options.excludeStatusCode {
+			for _, statusCode := range options.ExcludeStatusCode {
 				if statusCode == strconv.Itoa(r.Code) {
 					shouldOutput = false
 					break
@@ -58,11 +63,32 @@ func main() {
 		} else {
 			w.Write(r)
 		}
+
+		options.ProcessedNum++
+	}
+
+	if options.ProcessedNum != len(options.Wordlist) {
+		if options.ResumeFile == "" {
+			rand.Seed(time.Now().Unix())
+			options.ResumeFile = fmt.Sprintf("resume-%d.cfg", rand.Int())
+		}
+
+		err = options.WriteConfigFile(options.ResumeFile)
+		if err != nil {
+			log.Fatalf("read wordlist file failed: %s", err)
+		}
+	} else {
+		if options.ResumeFile != "" {
+			err = os.Remove(options.ResumeFile)
+			if err != nil {
+				log.Fatalf("remove resume file failed: %s", err)
+			}
+		}
 	}
 }
 
 func newClient(o *options) (*prad.Client, error) {
-	client, err := prad.NewClient(o.Wordlist)
+	client, err := prad.NewClient(o.Wordlist[o.ProcessedNum:])
 	if err != nil {
 		return nil, err
 	}

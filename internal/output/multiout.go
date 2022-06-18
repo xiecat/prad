@@ -1,8 +1,9 @@
 package output
 
 import (
-	"github.com/tardc/prad"
 	"log"
+
+	"github.com/tardc/prad"
 )
 
 type MultiOut struct {

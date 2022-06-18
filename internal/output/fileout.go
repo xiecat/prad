@@ -1,9 +1,10 @@
 package output
 
 import (
-	"github.com/tardc/prad"
 	"log"
 	"os"
+
+	"github.com/tardc/prad"
 )
 
 type FileOut struct {
@@ -11,7 +12,7 @@ type FileOut struct {
 }
 
 func NewFileOut(filename string) *FileOut {
-	f, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0644)
+	f, err := os.OpenFile(filename, os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Println("open file failed:", err)
 		return nil

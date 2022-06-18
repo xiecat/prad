@@ -1,8 +1,9 @@
 package output
 
 import (
-	"github.com/tardc/prad"
 	"testing"
+
+	"github.com/tardc/prad"
 )
 
 var filename = "output.txt"

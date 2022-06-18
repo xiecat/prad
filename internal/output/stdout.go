@@ -2,9 +2,10 @@ package output
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/logrusorgru/aurora"
 	"github.com/tardc/prad"
-	"net/http"
 )
 
 type Stdout struct {
