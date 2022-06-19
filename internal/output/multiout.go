@@ -1,8 +1,7 @@
 package output
 
 import (
-	"log"
-
+	log "github.com/sirupsen/logrus"
 	"github.com/tardc/prad"
 )
 
@@ -21,7 +20,7 @@ func (o *MultiOut) Write(r *prad.Result) error {
 	for _, w := range o.writes {
 		err := w.Write(r)
 		if err != nil {
-			log.Printf("write result %v failed on %v", r, w)
+			log.Warnf("write result %v failed on %v\n", r, w)
 		}
 	}
 
@@ -32,7 +31,7 @@ func (o *MultiOut) Close() error {
 	for _, w := range o.writes {
 		err := w.Close()
 		if err != nil {
-			log.Printf("close %v failed", w)
+			log.Warnf("close %v failed\n", w)
 		}
 	}
 

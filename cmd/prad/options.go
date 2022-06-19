@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path"
 
 	"github.com/projectdiscovery/goflags"
+	log "github.com/sirupsen/logrus"
 	"github.com/tardc/prad/assets"
 )
 
@@ -152,7 +152,7 @@ func (o *options) ReadWordFile(filename string) error {
 	}
 	err = fr.Close()
 	if err != nil {
-		log.Printf("close wordlist file failed: %s\n", err)
+		log.Warnf("close wordlist file failed: %s\n", err)
 	}
 	o.Wordlist = wordlist
 

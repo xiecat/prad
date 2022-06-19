@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -13,6 +12,7 @@ import (
 	"sync"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
 )
 
@@ -85,7 +85,7 @@ func (c *Client) Do(ctx context.Context, target string) (<-chan *Result, error) 
 				if c.rateLimiter != nil {
 					err := c.rateLimiter.Wait(ctx)
 					if err != nil {
-						log.Printf("rate limiter failed when wait: %s\n", err)
+						log.Debugf("rate limiter failed when wait: %s\n", err)
 					}
 				}
 
@@ -95,7 +95,7 @@ func (c *Client) Do(ctx context.Context, target string) (<-chan *Result, error) 
 				}
 				resp, err := c.Check(ctx, target, word)
 				if err != nil {
-					log.Printf("check %s %s failed: %s\n", target, word, err)
+					log.Debugf("check %s %s failed: %s\n", target, word, err)
 					continue
 				}
 

@@ -2,9 +2,10 @@ package interrupt
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/signal"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // HandleInterrupt handles interrupt signal using context.
@@ -20,11 +21,11 @@ func HandleInterrupt(cancelFunc context.CancelFunc) {
 		s, ok := <-signalChan
 		if ok {
 			if count == 0 {
-				log.Println("Got signal 1st time:", s)
+				log.Infoln("Got signal 1st time:", s)
 				count += 1
 				cancelFunc()
 			} else {
-				log.Println("Got signal 2nd time:", s)
+				log.Infoln("Got signal 2nd time:", s)
 				os.Exit(1)
 			}
 		} else {

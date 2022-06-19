@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/tardc/prad"
 	"github.com/tardc/prad/internal/output"
 	"github.com/tardc/prad/pkg/interrupt"
