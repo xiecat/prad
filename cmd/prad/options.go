@@ -30,7 +30,10 @@ type options struct {
 }
 
 func parseOptions() *options {
-	var wordFile string
+	var (
+		wordFile string
+		verbose  bool
+	)
 	o := &options{}
 	flags := goflags.NewFlagSet()
 	flags.SetDescription("web directory and file discovery.")
@@ -51,6 +54,7 @@ func parseOptions() *options {
 	flags.IntVar(&o.Timeout, "timeout", 5, "timeout")
 	flags.IntVar(&o.QPS, "qps", 10, "QPS")
 	flags.StringVar(&o.ResumeFile, "resume", "", "resume from config file")
+	flags.BoolVarP(&verbose, "verbose", "V", false, "verbose")
 
 	showBanner()
 	err := flags.Parse()
@@ -61,6 +65,10 @@ func parseOptions() *options {
 	if flags.CommandLine.NFlag() < 1 {
 		flags.CommandLine.Usage()
 		os.Exit(1)
+	}
+
+	if verbose {
+		log.SetLevel(log.DebugLevel)
 	}
 
 	if o.ResumeFile != "" {
