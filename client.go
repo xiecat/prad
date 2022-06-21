@@ -12,7 +12,6 @@ import (
 	"sync"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
 )
 
@@ -46,7 +45,12 @@ func NewClient(wordlist []string) (*Client, error) {
 	return c, nil
 }
 
-func (c *Client) Do(ctx context.Context, target string) (<-chan *Result, error) {
+type response struct {
+	Error  error
+	Result *Result
+}
+
+func (c *Client) Do(ctx context.Context, target string) (<-chan *response, error) {
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
@@ -68,7 +72,7 @@ func (c *Client) Do(ctx context.Context, target string) (<-chan *Result, error) 
 		}
 	}()
 
-	resultChan := make(chan *Result, c.concurrent)
+	resultChan := make(chan *response, c.concurrent)
 	wg := &sync.WaitGroup{}
 	for i := 0; i < c.concurrent && i < len(c.wordlist); i++ {
 		wg.Add(1)
@@ -83,23 +87,20 @@ func (c *Client) Do(ctx context.Context, target string) (<-chan *Result, error) 
 				}
 
 				if c.rateLimiter != nil {
-					err := c.rateLimiter.Wait(ctx)
-					if err != nil {
-						log.Debugf("rate limiter failed when wait: %s\n", err)
-					}
+					c.rateLimiter.Wait(ctx)
 				}
 
 				word, ok := <-wordChan
 				if !ok {
 					break
 				}
-				resp, err := c.Check(ctx, target, word)
-				if err != nil {
-					log.Debugf("check %s %s failed: %s\n", target, word, err)
-					continue
-				}
 
-				resultChan <- resp
+				result, err := c.Check(ctx, target, word)
+
+				resultChan <- &response{
+					Error:  err,
+					Result: result,
+				}
 			}
 		}()
 	}

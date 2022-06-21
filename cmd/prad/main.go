@@ -42,26 +42,31 @@ func main() {
 	defer w.Close()
 
 	for r := range resultChan {
+		if r.Error != nil {
+			log.Debugf("check failed: %s\n", r.Error)
+			continue
+		}
+
 		if options.FilterStatusCode != nil {
 			for _, statusCode := range options.FilterStatusCode {
-				if statusCode == strconv.Itoa(r.Code) {
-					w.Write(r)
+				if statusCode == strconv.Itoa(r.Result.Code) {
+					w.Write(r.Result)
 					break
 				}
 			}
 		} else if options.ExcludeStatusCode != nil {
 			var shouldOutput = true
 			for _, statusCode := range options.ExcludeStatusCode {
-				if statusCode == strconv.Itoa(r.Code) {
+				if statusCode == strconv.Itoa(r.Result.Code) {
 					shouldOutput = false
 					break
 				}
 			}
 			if shouldOutput {
-				w.Write(r)
+				w.Write(r.Result)
 			}
 		} else {
-			w.Write(r)
+			w.Write(r.Result)
 		}
 
 		options.ProcessedNum++
