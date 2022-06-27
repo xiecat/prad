@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"regexp"
 
 	"github.com/projectdiscovery/goflags"
 	log "github.com/sirupsen/logrus"
@@ -79,7 +80,11 @@ func parseOptions() *options {
 	}
 
 	if o.Target == "" {
-		log.Fatalf("target must be set")
+		log.Fatalln("target must be set")
+	} else {
+		if matched, err := regexp.MatchString(`(?i)^https?:\/\/`, o.Target); !matched || err != nil {
+			log.Fatalln("unsupported protocol scheme")
+		}
 	}
 
 	if o.Wordlist == nil {
