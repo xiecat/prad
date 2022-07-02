@@ -1,4 +1,4 @@
-module github.com/tardc/prad
+module github.com/xiecat/prad
 
 go 1.17
 

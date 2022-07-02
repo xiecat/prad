@@ -3,7 +3,7 @@ package output
 import (
 	"testing"
 
-	"github.com/tardc/prad"
+	"github.com/xiecat/prad"
 )
 
 var filename = "output.txt"

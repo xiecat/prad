@@ -9,9 +9,9 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/tardc/prad"
-	"github.com/tardc/prad/internal/output"
-	"github.com/tardc/prad/pkg/interrupt"
+	"github.com/xiecat/prad"
+	"github.com/xiecat/prad/internal/output"
+	"github.com/xiecat/prad/pkg/interrupt"
 )
 
 func main() {

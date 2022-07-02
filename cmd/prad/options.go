@@ -11,7 +11,7 @@ import (
 
 	"github.com/projectdiscovery/goflags"
 	log "github.com/sirupsen/logrus"
-	"github.com/tardc/prad/assets"
+	"github.com/xiecat/prad/assets"
 )
 
 type options struct {

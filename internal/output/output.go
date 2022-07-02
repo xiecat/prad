@@ -1,7 +1,7 @@
 package output
 
 import (
-	"github.com/tardc/prad"
+	"github.com/xiecat/prad"
 )
 
 type Writer interface {

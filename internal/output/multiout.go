@@ -2,7 +2,7 @@ package output
 
 import (
 	log "github.com/sirupsen/logrus"
-	"github.com/tardc/prad"
+	"github.com/xiecat/prad"
 )
 
 type MultiOut struct {
