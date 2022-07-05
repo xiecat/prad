@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/projectdiscovery/gologger"
 )
 
 // HandleInterrupt handles interrupt signal using context.
@@ -21,11 +21,11 @@ func HandleInterrupt(cancelFunc context.CancelFunc) {
 		s, ok := <-signalChan
 		if ok {
 			if count == 0 {
-				log.Infoln("Got signal 1st time:", s)
+				gologger.Info().Msgf("Got signal 1st time: %s", s)
 				count += 1
 				cancelFunc()
 			} else {
-				log.Infoln("Got signal 2nd time:", s)
+				gologger.Info().Msgf("Got signal 2nd time: %s", s)
 				os.Exit(1)
 			}
 		} else {

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/projectdiscovery/gologger"
 	"github.com/xiecat/prad"
 	"github.com/xiecat/prad/internal/output"
 	"github.com/xiecat/prad/pkg/interrupt"
@@ -20,7 +20,7 @@ func main() {
 
 	client, err := newClient(options)
 	if err != nil {
-		log.Fatalf("create client failed: %s\n", err)
+		gologger.Fatal().Msgf("create client failed: %s", err)
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -30,7 +30,7 @@ func main() {
 
 	resultChan, err := client.Do(ctx, options.Target)
 	if err != nil {
-		log.Fatalf("run failed: %s\n", err)
+		gologger.Fatal().Msgf("run failed: %s", err)
 	}
 
 	var w output.Writer
@@ -43,7 +43,7 @@ func main() {
 
 	for r := range resultChan {
 		if r.Error != nil {
-			log.Debugf("check failed: %s\n", r.Error)
+			gologger.Debug().Msgf("check failed: %s", r.Error)
 			continue
 		}
 
@@ -80,13 +80,13 @@ func main() {
 
 		err = options.WriteConfigFile(options.ResumeFile)
 		if err != nil {
-			log.Fatalf("read wordlist file failed: %s", err)
+			gologger.Fatal().Msgf("read wordlist file failed: %s", err)
 		}
 	} else {
 		if options.ResumeFile != "" {
 			err = os.Remove(options.ResumeFile)
 			if err != nil {
-				log.Fatalf("remove resume file failed: %s", err)
+				gologger.Fatal().Msgf("remove resume file failed: %s", err)
 			}
 		}
 	}

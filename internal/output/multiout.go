@@ -1,7 +1,7 @@
 package output
 
 import (
-	log "github.com/sirupsen/logrus"
+	"github.com/projectdiscovery/gologger"
 	"github.com/xiecat/prad"
 )
 
@@ -20,7 +20,7 @@ func (o *MultiOut) Write(r *prad.Result) error {
 	for _, w := range o.writes {
 		err := w.Write(r)
 		if err != nil {
-			log.Warnf("write result %v failed on %v\n", r, w)
+			gologger.Warning().Msgf("write result %v failed on %v", r, w)
 		}
 	}
 
@@ -31,7 +31,7 @@ func (o *MultiOut) Close() error {
 	for _, w := range o.writes {
 		err := w.Close()
 		if err != nil {
-			log.Warnf("close %v failed\n", w)
+			gologger.Warning().Msgf("close %v failed", w)
 		}
 	}
 

@@ -3,7 +3,7 @@ package output
 import (
 	"os"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/projectdiscovery/gologger"
 	"github.com/xiecat/prad"
 )
 
@@ -14,7 +14,7 @@ type FileOut struct {
 func NewFileOut(filename string) *FileOut {
 	f, err := os.OpenFile(filename, os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
-		log.Warnln("open file failed:", err)
+		gologger.Warning().Msgf("open file failed: %s", err)
 		return nil
 	}
 

@@ -10,7 +10,9 @@ import (
 	"regexp"
 
 	"github.com/projectdiscovery/goflags"
-	log "github.com/sirupsen/logrus"
+	"github.com/projectdiscovery/gologger"
+	"github.com/projectdiscovery/gologger/formatter"
+	"github.com/projectdiscovery/gologger/levels"
 	"github.com/xiecat/prad/assets"
 )
 
@@ -60,7 +62,7 @@ func parseOptions() *options {
 	showBanner()
 	err := flags.Parse()
 	if err != nil {
-		log.Fatalf("parse options failed: %s", err)
+		gologger.Fatal().Msgf("parse options failed: %s", err)
 	}
 
 	if flags.CommandLine.NFlag() < 1 {
@@ -68,29 +70,30 @@ func parseOptions() *options {
 		os.Exit(1)
 	}
 
+	gologger.DefaultLogger.SetFormatter(formatter.NewCLI(o.NoColor))
 	if verbose {
-		log.SetLevel(log.DebugLevel)
+		gologger.DefaultLogger.SetMaxLevel(levels.LevelVerbose)
 	}
 
 	if o.ResumeFile != "" {
 		err = o.ReadConfigFile(o.ResumeFile)
 		if err != nil {
-			log.Fatalf("resume failed from %s: %s", o.ResumeFile, err)
+			gologger.Fatal().Msgf("resume failed from %s: %s", o.ResumeFile, err)
 		}
 	}
 
 	if o.Target == "" {
-		log.Fatalln("target must be set")
+		gologger.Fatal().Msg("target must be set")
 	} else {
 		if matched, err := regexp.MatchString(`(?i)^https?:\/\/`, o.Target); !matched || err != nil {
-			log.Fatalln("unsupported protocol scheme")
+			gologger.Fatal().Msg("unsupported protocol scheme")
 		}
 	}
 
 	if o.Wordlist == nil {
 		err = o.ReadWordFile(wordFile)
 		if err != nil {
-			log.Fatalf("read wordlist file failed: %s", err)
+			gologger.Fatal().Msgf("read wordlist file failed: %s", err)
 		}
 	}
 
@@ -165,7 +168,7 @@ func (o *options) ReadWordFile(filename string) error {
 	}
 	err = fr.Close()
 	if err != nil {
-		log.Warnf("close wordlist file failed: %s\n", err)
+		gologger.Warning().Msgf("close wordlist file failed: %s", err)
 	}
 	o.Wordlist = wordlist
 
