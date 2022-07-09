@@ -85,7 +85,7 @@ func parseOptions() *options {
 	if o.Target == "" {
 		gologger.Fatal().Msg("target must be set")
 	} else {
-		if matched, err := regexp.MatchString(`(?i)^https?:\/\/`, o.Target); !matched || err != nil {
+		if matched, err := regexp.MatchString(`(?i)^https?://`, o.Target); !matched || err != nil {
 			gologger.Fatal().Msg("unsupported protocol scheme")
 		}
 	}
