@@ -12,6 +12,8 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
+// Reference: http://seclists.org/nmap-dev/2011/q2/att-1005/http-waf-detect.nse
+// Reference: https://github.com/sqlmapproject/sqlmap/blob/c722f8e3bd4aac3a5dc2287db9e9dd04fb4ce257/lib/core/settings.py
 const (
 	IPSWAFCheckPayload = "AND 1=1 UNION ALL SELECT 1,NULL,'<script>alert(\"XSS\")</script>',table_name FROM information_schema.tables WHERE 2>1--/**/; EXEC xp_cmdshell('cat ../../../etc/passwd')#"
 	letters            = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
